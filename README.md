@@ -1,2 +1,2 @@
 # DSPN
-Distantly supervised pyramid network for ACSA
+Distantly supervised pyramid network for Document-level End-to-end Sentiment Analysis
