@@ -1,10 +1,8 @@
-<style>
-@import url('https://fonts.cdnfonts.com/css/sf-sports-night');
-</style>
 
 # Distantly Supervised Pyramid Networks
 
-<span style="color: black; font-family: sf sports night; font-size: 4em;">DSPN</span>
+
+![DSPN](logo.png)
 
 
 Distantly supervised pyramid network for Document-level End-to-end Sentiment Analysis.
