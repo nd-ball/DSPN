@@ -14,17 +14,17 @@ We also propose the Distantly Supervised Pyramid Network (DSPN), which hierarchi
 
 ```
 📂 data/processed             # Contains processed datasets
-📂 preprocess/            # Notebook for preprocessing datasets
-📜 DSPN.ipynb  # Main notebook for DSPN experiments
-📜 Packages.ipynb  # Notebook for installing required libraries
-📜 logo.png     # LOGO of DSPN
-📜 models.py         # Code for model implementation
-📜 preprocess.py         # Preprocessing code for data input
-📜 test_func.py         # Functions for testing model performance
-📜 trainer.py         # Code for model training
-📜 utils.py         # Common code shared across files
-📜 LICENSE               # Project license information
-📜 README.md               # Project documentation
+📂 preprocess/                # Notebook for preprocessing datasets
+📜 DSPN.ipynb                 # Main notebook for DSPN experiments
+📜 Packages.ipynb             # Notebook for installing required libraries
+📜 logo.png                   # LOGO of DSPN
+📜 models.py                  # Code for model implementation
+📜 preprocess.py              # Preprocessing code for data input
+📜 test_func.py               # Functions for testing model performance
+📜 trainer.py                 # Code for model training
+📜 utils.py                   # Common code shared across files
+📜 LICENSE                    # Project license information
+📜 README.md                  # Project documentation
 ```
 
 ## Setup & Installation
