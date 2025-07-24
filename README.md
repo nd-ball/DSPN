@@ -33,7 +33,7 @@ Please refer to the Packages.ipynb notebook.
 
 ## Usage
 
-You can train and test DSPN by running the DSPN.ipynb notebook. The model can also be adjusted for customization in models.py.
+In the main notebook (DSPN.ipynb), you can choose the dataset and multiple hyperparameters (such as epoch number, batch size) to experiment with.  The model can also be adjusted for customization in models.py.
 
 ## License
 
