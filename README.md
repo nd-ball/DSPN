@@ -40,6 +40,6 @@ You can train and test DSPN by running the DSPN.ipynb notebook. The model can al
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 ```
-# Contributors
+## Contributors
 
 This project is maintained by Wenchang Li and John P. Lalor.
