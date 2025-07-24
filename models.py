@@ -38,46 +38,41 @@ class ABAE(nn.Module):
 
     def forward(self, pos, negs):
         z_s, p_t = self.get_aspect_importance(pos)
-        r_s = F.normalize(torch.mm(self.T.weight.t(), p_t.t()).t(), dim=-1) # 重构的表达
+        r_s = F.normalize(torch.mm(self.T.weight.t(), p_t.t()).t(), dim=-1) # representation of reconstruction
         z_n = torch.stack([self.bert(b).pooler_output for b in negs])
 
         return r_s, z_s, z_n, p_t
     
     
     def get_aspect_importance(self, pos):
-        z_s = self.bert(pos).pooler_output # 句子表达
-        p_t = F.softmax(self.linear(z_s), dim=1) # 方面权重
+        z_s = self.bert(pos).pooler_output # review representation
+        p_t = F.softmax(self.linear(z_s), dim=1) # aspect weight
         
         return z_s, p_t
     
     
 
     def evaluate_aspect(self, topk=10):
-        # 获取 BERT 的静态词嵌入矩阵
+        # Get BERT's static word embedding matrix
         word_embedding_matrix = self.bert.embeddings.word_embeddings.weight.data.cpu().numpy()
-        # 获取词到索引的映射
         vocab = self.tokenizer.get_vocab()
         index_to_word = {idx: word for word, idx in vocab.items()}
-        # 获取 topic 嵌入矩阵
+        # Get topic embedding matrix
         topic_embeddings = self.T.weight.data.cpu().numpy()
-        # 存储每个 topic 的 top-k 词
         aspect_words = {}
         coherence_scores = []
-        # 计算每个 topic 的 top-k 词
         chinese_pattern = re.compile(r'^[\u4e00-\u9fff]+$')
         for topic_idx, topic_emb in enumerate(topic_embeddings):
             similarities = {}            
             for word_idx, word_emb in enumerate(word_embedding_matrix):
                 word = index_to_word[word_idx]
-                # 只考虑长度大于等于 2 的词
-                # 只保留中文词
                 if chinese_pattern.match(word):
                     similarity = cosine_similarity(topic_emb.reshape(1, -1), word_emb.reshape(1, -1))[0][0]
                     similarities[word_idx] = similarity
                 
                 word = index_to_word[word_idx]
                 
-            # 找到最接近的 top-k 词
+            # Find the top-k closest words
             top_word_indices = sorted(similarities, key=lambda x: similarities[x], reverse=True)[:topk]
             top_words = [index_to_word[idx] for idx in top_word_indices]
             aspect_words[topic_idx] = top_words
@@ -125,7 +120,7 @@ class DSPN(nn.Module):
     def forward(self, pos, negs):
         z_s, p_t = self.get_aspect_importance(pos)
         r_senti, a_senti = self.pyramid(pos, p_t)
-        r_s = F.normalize(torch.mm(self.T.weight.t(), p_t.t()).t(), dim=-1) # 重构的表达
+        r_s = F.normalize(torch.mm(self.T.weight.t(), p_t.t()).t(), dim=-1)
         z_n = torch.stack([self.bert(b).pooler_output for b in negs])
         
         return r_s, z_s, z_n, p_t, r_senti, a_senti
@@ -133,8 +128,8 @@ class DSPN(nn.Module):
     
     
     def get_aspect_importance(self, pos):
-        z_s = self.bert(pos).pooler_output # 句子表达
-        p_t = F.softmax(self.linear(z_s), dim=1) # 方面权重
+        z_s = self.bert(pos).pooler_output
+        p_t = F.softmax(self.linear(z_s), dim=1)
         
         return z_s, p_t
     
@@ -153,7 +148,7 @@ class DSPN(nn.Module):
         w_att = []
 
         for b in range(w_senti.shape[0]):
-            '''1.利用aspect embedding和word embedding计算出对每个aspect的word-level attention'''
+            '''1. Use aspect embedding and word embedding to calculate the word-level attention for each aspect'''
             # Cosine
             # words_att = torch.softmax(F.cosine_similarity(e[b].unsqueeze(1), self.T.weight.unsqueeze(0), dim=-1), dim=0)
             # Euclidean distance
@@ -163,12 +158,12 @@ class DSPN(nn.Module):
             w_att.append(words_att)
             
 
-            '''2.结合每个词的sentiment计算出asp的sentiment'''
+            '''2. Calculate the sentiment of ASP by combining the sentiment of each word'''
             words_sentiment_batch = w_senti[b]
             asp_sentiment = torch.matmul(words_att.permute(1, 0), words_sentiment_batch)  # (asp_num * 3)
             a_senti.append(asp_sentiment)
 
-            '''3.再结合asp_dis得到最终sentiment'''
+            '''3. Combine with asp_dis to get the final sentiment'''
             sentiment = torch.matmul(p_t[b], asp_sentiment)
             r_senti.append(sentiment)
 
