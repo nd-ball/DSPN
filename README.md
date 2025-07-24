@@ -42,4 +42,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ```
 # Contributors
 
-This project is maintained by the Human-centered Analytics Lab (HAL).
+This project is maintained by Wenchang Li and John P. Lalor.
